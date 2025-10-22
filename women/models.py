@@ -1,5 +1,6 @@
 from django.db import models
 from django.shortcuts import reverse
+from taggit.managers import TaggableManager
 
 
 class PulishedManager(models.Manager):
@@ -21,6 +22,8 @@ class Women(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(choices=Status, default=Status[1])
 
+    cat = models.ForeignKey("Category", on_delete=models.CASCADE, related_name="women")
+
     objects = models.Manager()
     published = PulishedManager()
 
@@ -33,3 +36,16 @@ class Women(models.Model):
     class Meta:
         ordering = ["-time_create"]
         indexes = [models.Index(fields=["-time_create"])]
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
+    
+    tags = TaggableManager()
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("categories", kwargs={"cat_slug": self.slug})
