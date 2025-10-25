@@ -5,7 +5,12 @@ from taggit.managers import TaggableManager
 
 class PulishedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_published=Women.Status[1])
+        return (
+            super()
+            .get_queryset()
+            .filter(is_published=Women.Status[1])
+            .select_related("cat")
+        )
 
 
 # Create your models here.
