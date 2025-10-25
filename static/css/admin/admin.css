@@ -1,0 +1,19 @@
+#header, .module caption {
+  background-color: #053379;
+}
+
+#site-name a {
+  color: #fff;
+  text-transform: uppercase;
+}
+
+#site-name a:visited {
+  color: #fff;
+}
+
+#content > h1 {
+  color: #000;
+  font-size: 20px;
+  font-weight: 600;
+}
+
