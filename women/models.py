@@ -41,7 +41,7 @@ class Women(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
-    
+
     tags = TaggableManager()
 
     def __str__(self):
@@ -49,3 +49,12 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("categories", kwargs={"cat_slug": self.slug})
+
+
+class Husband(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField(null=True)
+    m_count = models.IntegerField(blank=True, default=0)
+
+    def __str__(self):
+        return self.name
