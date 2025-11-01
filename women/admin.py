@@ -60,7 +60,7 @@ class WomenAdmin(admin.ModelAdmin):
     @admin.display(description='Фото')
     def post_photo(self, women):
         if women.photo:
-            return mark_save(f"<img src='{women.photo.url}' width=50 />")
+            return mark_safe(f"<img src='{women.photo.url}' width=50 />")
         return 'Без фото'
 
     @admin.display(description="Краткое содержание", ordering="content")
