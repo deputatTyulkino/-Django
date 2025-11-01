@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %} {{ title }}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="error">{{ form.non_field_errors }}</div>
+  {% for field in form %}
+  <div>
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    <input
+      type="{{ field.field.widget.input_type }}"
+      id="{{ field.id_for_label }}"
+    />
+    <div>{{ field.errors }}</div>
+  </div>
+  {% endfor %}
+  <button type="submit">Отправить</button>
+</form>
+{% endblock %}

@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import Women, Category, Husband
 from django.contrib import messages
 from django.template.defaultfilters import slugify
+from django.utils.safestring import mark_safe
 
 
 # Register your models here.
@@ -26,9 +27,10 @@ class MarriedFilter(admin.SimpleListFilter):
 
 @admin.register(Women)
 class WomenAdmin(admin.ModelAdmin):
-    fields = ['title', 'slug', 'content', 'cat']
+    fields = ['photo', 'title', 'slug', 'content', 'cat']
     list_display = (
         "title",
+        'post_photo',
         "time_create",
         "is_published",
         "information",
@@ -46,18 +48,24 @@ class WomenAdmin(admin.ModelAdmin):
     # readonly_fields = ['slug']
 
     actions = ["set_published", "set_draft"]
-    
+
     def save(self, *args, **kwargs):
       if not self.slug:
         self.slug = slugify(self.title)
         if Women.objects.filter(slug=self.slug).exists():
             self.slug += f"-{uuid4()}"
       super().save(*args, **kwargs)
-        
+
+
+    @admin.display(description='Фото')
+    def post_photo(self, women):
+        if women.photo:
+            return mark_save(f"<img src='{women.photo.url}' width=50 />")
+        return 'Без фото'
 
     @admin.display(description="Краткое содержание", ordering="content")
     def information(self, women):
-        return f"{women.content[:30]}..."
+        return f"{women.content[:30]}..." if len(women.content) > 30 else women.content
 
     # request - объект запроса, queryset - список объектов
     @admin.action(description="Опубликовать")
@@ -79,6 +87,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "name",
         "slug",
     )
+    prepopulated_fields = {'slug': ('name', )}
     list_display_links = ("name",)
 
 

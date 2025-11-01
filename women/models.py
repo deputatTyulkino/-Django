@@ -20,6 +20,13 @@ class Women(models.Model):
         ("1", "Опубликовано"),
     )
 
+    photo = models.ImageField(
+        verbose_name='Фото',
+        upload_to='photos/%Y/%m/%d',
+        blank=True,
+        null=True,
+        default=None,
+    )
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.SlugField(max_length=255, db_index=True, verbose_name="URL")
     content = models.TextField(blank=True, verbose_name="Текст")
@@ -74,7 +81,7 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("categories", kwargs={"cat_slug": self.slug})
-    
+
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"

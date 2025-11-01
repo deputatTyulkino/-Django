@@ -1,7 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseNotFound, Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
 from .models import Women, Category
 from taggit.models import Tag
+from .forms import AddPageForm
+from django.contrib import messages
+import uuid
 
 
 # Create your views here.
@@ -43,7 +46,14 @@ def page_not_found(request, exception):
 
 
 def add_page(request):
-    return HttpResponse("Добавление статьи")
+    if request.method == "POST":
+        form = AddPageForm(request.POST)
+        if form.is_valid():
+            messages.success("Form add db")
+            form.save()
+            redirect('home')
+    form = AddPageForm()
+    return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
 
 
 def contact(request):
