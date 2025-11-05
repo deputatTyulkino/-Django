@@ -81,3 +81,7 @@ class AddPageForm(forms.ModelForm):
         if len(title) > 50:
             raise ValidationError('Длина превышает 50 символов')
         return title
+
+class InfForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    phone = forms.CharField(max_length=12)
