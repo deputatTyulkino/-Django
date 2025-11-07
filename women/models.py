@@ -1,6 +1,9 @@
 from django.db import models
 from django.shortcuts import reverse
 from taggit.managers import TaggableManager
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class PulishedManager(models.Manager):
@@ -34,6 +37,14 @@ class Women(models.Model):
     time_update = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
     is_published = models.BooleanField(
         choices=Status, default=Status[1], verbose_name="Опубликовано"
+    )
+
+    author = models.ForeignKey(
+        User,
+        related_name='posts',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
     )
 
     husband = models.OneToOneField(

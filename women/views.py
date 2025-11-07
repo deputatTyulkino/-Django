@@ -10,6 +10,8 @@ from django.views.generic import ListView, DetailView, FormView, CreateView, Upd
 from django.urls import reverse_lazy, reverse
 from .utils import DataMixin
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Create your views here.
@@ -17,6 +19,7 @@ def index(request):
     data = {"title": "Главная страница"}
     return render(request, "base.html", data)
 
+@login_required(login_url='/admin/')
 def about(request):
     womens = Women.published.all()
     paginator = Paginator(womens, 3)
@@ -48,11 +51,12 @@ def show_category(request, cat_slug):
 
 #     return render(request, "post.html", data)
 
-class PostDetail(DataMixin, DetailView):
+class PostDetail(LoginRequiredMixin, DataMixin, DetailView):
     model = Women
     template_name = 'post.html'
     context_object_name = 'post'
     slug_url_kwarg = 'post_slug'
+    # login_url = ...
     # pk_url_kwarg = '...'
 
     def get_context_data(self, **kwargs):
@@ -76,13 +80,18 @@ def page_not_found(request, exception):
 #     form = AddPageForm()
 #     return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
 
-class AddPage(CreateView):
+class AddPage(LoginRequiredMixin, CreateView):
     # form_class = AddPageForm
     model = Women
     fields = '__all__'
     template_name = 'addPageForm.html'
     # success_url = reverse_lazy('home')
     # extra_context = {...}
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
 
 
 # class AddPage(View):

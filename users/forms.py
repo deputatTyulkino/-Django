@@ -10,4 +10,4 @@ class LoginUserForm(AuthenticationForm):
 
     class Meta:
         model = User
-        fields = (username, password)
+        fields = ('username', 'password')
