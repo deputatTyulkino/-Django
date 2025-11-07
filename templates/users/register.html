@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<h1>{{ title }}</h1>
+
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="errors">{{ form.non_field_errors }}</div>
+  {% for field in form %}
+  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {{ field }}
+  <div class="field_error">{{ f.errors }}</div>
+  {% endfor %}
+  <button type="submit">Зарегистрироваться</button>
+</form>
+{% endblock %}

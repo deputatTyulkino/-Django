@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .forms import LoginUserForm
-# from django.contrib.auth import authenticate, login, logout
+from .forms import LoginUserForm, RegisterUserForm
+from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 
@@ -29,3 +29,16 @@ class LoginUser(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            # Либо в форме определить метод save()
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)
+            return redirect('home')
+    form = RegisterUserForm()
+    return render(request, 'users/register.html', {'form': form})
