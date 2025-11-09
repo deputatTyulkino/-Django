@@ -4,8 +4,12 @@ from .forms import LoginUserForm, RegisterUserForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
+from .fomrs import ProfileUserFrom
 
+User = get_user_model()
 # Create your views here.
 # def login(request):
 #     if request.method == 'POST':
@@ -49,3 +53,15 @@ class RegisterUser(CreateView):
     template_name = 'users/register.html'
     extra_context = {'title': 'Registration'}
     success_url = reverse_lazy('home')
+
+class ProfileUser(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = ProfileUserFrom
+    template_name = 'users/profile.html'
+    extra_context = {'title': '...'}
+
+    def get_success_url(self):
+        return reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user

@@ -40,3 +40,12 @@ class RegisterUserForm(UserCreationForm):
             user.save()
 
         return user
+
+
+class ProfileUserForm(forms.ModelForm):
+    username = forms.CharField(disabled=True, label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.CharField(label='Email', disabled=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'first_name', 'last_name')
