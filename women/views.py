@@ -10,8 +10,8 @@ from django.views.generic import ListView, DetailView, FormView, CreateView, Upd
 from django.urls import reverse_lazy, reverse
 from .utils import DataMixin
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 # Create your views here.
@@ -80,11 +80,12 @@ def page_not_found(request, exception):
 #     form = AddPageForm()
 #     return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
 
-class AddPage(LoginRequiredMixin, CreateView):
+class AddPage(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     # form_class = AddPageForm
     model = Women
     fields = '__all__'
     template_name = 'addPageForm.html'
+    permission_required = 'women.add_women' # приложение.разрешение_таблица
     # success_url = reverse_lazy('home')
     # extra_context = {...}
 
@@ -107,12 +108,15 @@ class AddPage(LoginRequiredMixin, CreateView):
 #             return redirect('home')
 #         return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
 
-class UpdatePage(UpdateView):
+class UpdatePage(PermissionRequiredMixin, UpdateView):
     model = Women
     fields = '__all__'
     template_name = 'AddPageForm.html'
     success_url = reverse_lazy('home')
+    permission_required = 'women.change_women' # приложение.разрешение_таблица
 
+
+@permission_required(perm='women.view_women', raise_exception=True)
 def contact(request):
     return HttpResponse("Обратная связь")
 
