@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
-from .fomrs import ProfileUserFrom, UserPasswordChangeForm
+from .forms import ProfileUserForm, UserPasswordChangeForm
 
 User = get_user_model()
 # Create your views here.
@@ -56,7 +56,7 @@ class RegisterUser(CreateView):
 
 class ProfileUser(LoginRequiredMixin, UpdateView):
     model = User
-    form_class = ProfileUserFrom
+    form_class = ProfileUserForm
     template_name = 'users/profile.html'
     extra_context = {'title': '...'}
 
