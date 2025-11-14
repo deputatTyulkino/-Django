@@ -25,31 +25,28 @@ def about(request):
     paginator = Paginator(womens, 3)
 
     page_number = request.GET.get('page')
-    current = Paginator.get_page(page_number)
+    current = paginator.get_page(page_number)
 
     return render(request, 'about.html', {'current': current})
 
-def show_category(request, cat_slug):
-    category = get_object_or_404(Category, slug=cat_slug)
-    posts = Women.published.filter(category_id=category.pk)
+class ShowCategory(ListView):
+    template_name = 'about.html'
+    context_object_name = 'posts'
+    
+    def get_category(self, slug):
+        return get_object_or_404(Category, slug=slug)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_contet_data(**kwargs)
+        context['title'] = self.get_category(self.kwargs['cat_slug']).title
+        context['cat_selected'] = self.get_category(self.kwargs['cat_slug']).pk
+        return context
+    
+    def get_queryset(self):
+        category = get_object_or_404(Category, slug=self.kwargs['cat_slug'])
+        return Women.published.filter(category_id=category.pk)
+        
 
-    data = {
-        "title": category.title,
-        "posts": posts,
-        "cat_selected": category.pk,
-    }
-
-    return render(request, "about.html", data)
-
-# def show_post(request, post_slug):
-#     post = get_object_or_404(Women, slug=post_slug)
-
-#     data = {
-#         "title": post.title,
-#         "post": post,
-#     }
-
-#     return render(request, "post.html", data)
 
 class PostDetail(LoginRequiredMixin, DataMixin, DetailView):
     model = Women
@@ -69,17 +66,6 @@ class PostDetail(LoginRequiredMixin, DataMixin, DetailView):
 def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
 
-
-# def add_page(request):
-#     if request.method == "POST":
-#         form = AddPageForm(request.POST)
-#         if form.is_valid():
-#             messages.success("Form add db")
-#             form.save()
-#             redirect('home')
-#     form = AddPageForm()
-#     return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
-
 class AddPage(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     # form_class = AddPageForm
     model = Women
@@ -93,20 +79,6 @@ class AddPage(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         w = form.save(commit=False)
         w.author = self.request.user
         return super().form_valid(form)
-
-
-# class AddPage(View):
-#     def get(self, request):
-#         form = AddPageForm()
-#         return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
-
-#     def post(self, request):
-#         form = AddPageForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             messages.success("Form add db")
-#             form.save()
-#             return redirect('home')
-#         return render(request, "addPageForm.html", {"title": "Добавить пост", "form": form})
 
 class UpdatePage(PermissionRequiredMixin, UpdateView):
     model = Women
@@ -143,9 +115,3 @@ class FormPage(FormView):
     template_name = 'form.html'
     success_url = reverse_lazy('home')
 
-    # def get_success_url(self):
-    #     return reverse(...)
-
-    # def form_valid(self, form):
-    #     ...
-    #     return super().form_valid(form)
