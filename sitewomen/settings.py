@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'women',
     'users',
-    'taggit'
+    'taggit',
+    'social_django'
 ]
 
 MIDDLEWARE = [
@@ -135,8 +136,9 @@ LOGIN_URL = 'users:login'
 LOGOUT_REDIRECT_URL = 'home'
 
 AUTHENTICATION_BACKENDS = [
+    'social_core.backends.github.GithubOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-    'users.authentication.EmailAuthBackend'
+    'users.authentication.EmailAuthBackend',
 ]
 
 EMAIL_HOST = 'smtp.yandex.ru'
