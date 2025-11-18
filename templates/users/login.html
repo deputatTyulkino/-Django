@@ -10,5 +10,6 @@
   <div class="field_error">{{ f.errors }}</div>
   {% endfor %}
   <button type="submit">Log in</button>
+  <a href="{% url 'social:begin' 'github' %}">Войти с помощью github</a>
 </form>
 {% endblock %}
