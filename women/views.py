@@ -53,8 +53,6 @@ class PostDetail(LoginRequiredMixin, DataMixin, DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
     slug_url_kwarg = 'post_slug'
-    # login_url = ...
-    # pk_url_kwarg = '...'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -67,13 +65,10 @@ def page_not_found(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
 
 class AddPage(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
-    # form_class = AddPageForm
     model = Women
     fields = '__all__'
     template_name = 'addPageForm.html'
     permission_required = 'women.add_women' # приложение.разрешение_таблица
-    # success_url = reverse_lazy('home')
-    # extra_context = {...}
 
     def form_valid(self, form):
         w = form.save(commit=False)
@@ -94,15 +89,9 @@ def contact(request):
 
 class TagsPostList(DataMixin, ListView):
     template_name = 'about.html'
-    # model = Category
-    # queryset = Category.objects.filter(...)
-
     context_object_name = 'categories'
     title_page = 'Main Page'
     cat_id = 0
-    # extra_context = {
-    #     'title': 'Main page'
-    # }
     allow_empty = False
     paginate_by = 3
 

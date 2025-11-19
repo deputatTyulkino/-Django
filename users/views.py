@@ -10,22 +10,6 @@ from django.contrib.auth import get_user_model
 from .forms import ProfileUserForm, UserPasswordChangeForm
 
 User = get_user_model()
-# Create your views here.
-# def login(request):
-#     if request.method == 'POST':
-#         form = LoginUserForm(request.POST)
-#         if form.is_valid():
-#             cd = form.cleaned_data
-#             user = authenticate(request, username=cd['username'], password=cd['password'])
-#             if user and user.is_active:
-#                 login(request, user)
-#                 return redirect('home')
-#     form = LoginUserForm()
-#     return render(request, 'users/login.html', {'form': form})
-
-# def logout(request):
-#     logout(request)
-#     return redirect('users:login')
 
 class LoginUser(LoginView):
     form_class = LoginUserForm
@@ -34,19 +18,6 @@ class LoginUser(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
-
-# def register(request):
-#     if request.method == 'POST':
-#         form = RegisterUserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             # Либо в форме определить метод save()
-#             # user.set_password(form.cleaned_data['password'])
-#             # user.save()
-#             login(request, user)
-#             return redirect('home')
-#     form = RegisterUserForm()
-#     return render(request, 'users/register.html', {'form': form})
 
 class RegisterUser(CreateView):
     form_class = RegisterUserForm
