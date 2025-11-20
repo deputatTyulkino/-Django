@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'women',
     'users',
     'taggit',
-    'social_django'
+    'social_django',
+    'captcha'
 ]
 
 MIDDLEWARE = [

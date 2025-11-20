@@ -1,16 +1,13 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseNotFound
 from .models import Women, Category
 from taggit.models import Tag
-from .forms import AddPageForm, InfForm
-from django.contrib import messages
-import uuid
-from django.views import View
+from .forms import AddPageForm, InfForm, ContactForm
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from .utils import DataMixin
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
@@ -83,9 +80,19 @@ class UpdatePage(PermissionRequiredMixin, UpdateView):
     permission_required = 'women.change_women' # приложение.разрешение_таблица
 
 
-@permission_required(perm='women.view_women', raise_exception=True)
-def contact(request):
-    return HttpResponse("Обратная связь")
+# @permission_required(perm='women.view_women', raise_exception=True)
+# def contact(request):
+#     return HttpResponse("Обратная связь")
+
+class ContactFormView(LoginRequiredMixin, FormView):
+    form_class = ContactForm
+    template_name = 'women/contact.html'
+    success_url = reverse_lazy('home')
+    
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
 
 class TagsPostList(DataMixin, ListView):
     template_name = 'about.html'

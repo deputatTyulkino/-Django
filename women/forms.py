@@ -1,6 +1,7 @@
 from django import forms
 from .models import Category, Husband, Women
 from django.core.validators import ValidationError
+from captcha.fields import CaptchaField
 
 class AddPageForm(forms.ModelForm):
     cat = forms.ModelChoiceField(
@@ -32,3 +33,9 @@ class AddPageForm(forms.ModelForm):
 class InfForm(forms.Form):
     name = forms.CharField(max_length=50)
     phone = forms.CharField(max_length=12)
+
+class ContactForm(forms.Form):
+    name = forms.CharField(label='Name', max_length=255)
+    email = forms.EmailField(label='Email', max_length=255)
+    content = forms.CharField(label='Content', widget=forms.Textarea)
+    captcha = CaptchaField()

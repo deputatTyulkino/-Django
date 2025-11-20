@@ -25,7 +25,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("women.urls")),
     path('users/', include('users.urls')),
-    path('social-auth/', include('social_django.urls', namespace='social'))
+    path('social-auth/', include('social_django.urls', namespace='social')),
+    path('captcha/', include('captcha.urls')),
 ]
 
 if settings.DEBUG:
