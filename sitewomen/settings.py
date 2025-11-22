@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'users',
     'taggit',
     'social_django',
-    'captcha'
 ]
 
 MIDDLEWARE = [

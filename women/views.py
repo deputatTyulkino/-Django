@@ -93,7 +93,6 @@ class ContactFormView(LoginRequiredMixin, FormView):
         print(form.cleaned_data)
         return super().form_valid(form)
 
-
 class TagsPostList(DataMixin, ListView):
     template_name = 'about.html'
     context_object_name = 'categories'
